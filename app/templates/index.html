@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TODOLIST</title>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
+    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/index.js')}}"></script>
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}} ">
+
+
+</head>
+<body background="{{ url_for('static',filename='images/tulip.jpg') }}">
+
+<!-- 导航条 -->
+<nav class="navbar navbar-default">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">
+                <img class="logo" src="">
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/">首页 <span class="sr-only">(current)</span></a></li>
+                <li><a href="">任务</a></li>
+                <li><a href="">笔记</a></li>
+            </ul>
+            <form class="navbar-form navbar-left" action="" method="get">
+                <div class="form-group">
+                    <input name="q" type="text" class="form-control" placeholder="请输入关键字">
+                </div>
+                <button type="submit" class="btn btn-default">搜索查看</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                {% if user %}
+                    <li><a href="" id="">{{ user.username }}</a></li>
+                    <li><a href="/logout/">注销</a></li>
+                {% else %}
+                    <li><a href="" id="login">登陆</a></li>
+                    <li><a href="" id="reg">注册</a></li>
+                {% endif %}
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+
+
+<!-- 代码区 -->
+
+<!-- 主界面 -->
+
+<div class="main">
+
+    <div class="task_boxs">
+        <div class="task_name">Task:</div>
+
+
+        <!-- tasks -->
+        {% if tasks %}
+                {% for task in tasks %}
+                    {% if task.status == 2 %}
+                        <div class="unfinish_background_color" style="margin-left: 35px;">
+                            <a href="" title="激活" style="text-decoration : none ">
+                                <span class="glyphicon glyphicon-repeat ok_style" ></span>
+                            </a>
+                            <span class="content_text">{{ task.title }}</span>
+                        </div>
+                    {% else %}
+                        <div class="finished_background_color">
+                            <a href="" title="完成" style="text-decoration : none ">
+                                <span class="glyphicon glyphicon-ok ok_style"></span>
+                            </a>
+                            <span class="content_text">{{ task.title }}</span>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+        {% else %}
+            <div class="finished_background_color" style="margin-left: 35px;">
+                <span class="glyphicon glyphicon-ok ok_style"></span>
+                <span class="content_text">想要使用TODOList吗？</span>
+            </div>
+            <div class="finished_background_color" style="margin-left: 35px;">
+                <span class="glyphicon glyphicon-ok ok_style"></span>
+                <span class="content_text">请先登陆或者注册吧   O(∩_∩)O哈哈哈~</span>
+            </div>
+            <div class="finished_background_color" style="margin-left: 35px;">
+                <span class="glyphicon glyphicon-ok ok_style"></span>
+                <span class="content_text"> ---- 东京热 2017.11.11</span>
+            </div>
+
+        {% endif %}
+    </div>
+
+
+
+    <!-- note -->
+    <div class="note_box">
+
+    </div>
+
+
+</div>
+
+
+<div class="modal" id="signin_modal" tabindex="-1" role="dialog" aria-labelledby="signin_modal_label"
+     aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="signin_modal_label">登录</h4>
+            </div>
+            <div class="modal-body">
+                <form id="m_signin_form" role="form" action="/login/" method="post">
+                    <div class="form-group">
+                        <label for="m_signin_email" class="sr-only">邮箱/手机号</label>
+                        <input type="text" class="form-control" id="m_signin_email" name="username" required=""
+                               placeholder="用户名/手机号" maxlength="32">
+                        <span class="text-danger small" style="display:none"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="m_signin_password" class="sr-only">密码</label>
+                        <input type="password" class="form-control" id="m_signin_password" name="password" required=""
+                               placeholder="密码">
+                        <span class="text-danger small" style="display:none"></span>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="remember" checked=""> 下次自动登录 </label>
+                    </div>
+                    <button type="submit" class="btn btn-lg btn-success btn-block" data-loading-text="正在登录...">登录
+                    </button>
+                    <input type="hidden" name="__csrf__"
+                           value="6666cd76f96956469e7be39d750cc7d9_f003d7bc768ee7be43f5420a9110e71d">
+                </form>
+                <div style="margin:10px 0">
+                    <a href="" id="forgot">忘记了密码?</a>
+                    <a class="pull-right" href="" id="goto_reg">没有账号? 马上注册</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="signup_modal" tabindex="-1" role="dialog" aria-labelledby="signup_modal_label"
+     aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="signup_modal_label">注册</h4>
+            </div>
+            <div class="modal-body">
+                <form id="m_signup_form" role="form" action="/reg/" method="post">
+                    <div class="form-group">
+                        <label for="m_signup_email" class="sr-only">邮箱/手机号</label>
+                        <input type="text" class="form-control" id="username" name="username" required=""
+                               placeholder="邮箱/手机号，需验证" maxlength="32">
+                        <span class="text-danger small" style="display:none"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="m_signup_password" class="sr-only">密码</label>
+                        <input type="password" class="form-control" id="m_signup_password" name="password" required=""
+                               placeholder="密码">
+                        <span class="text-danger small" id="m_signup_password_tips" style="display:none">字母、数字或下划线，最短6个字符，区分大小写</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="m_invite_code" class="sr-only">邀请码</label>
+                        <input type="text" class="form-control" id="invite_code" name="invite_code" required=""
+                               placeholder="邀请码(东京有点热)" maxlength="6">
+                        <span class="text-danger small" style="display:none"></span>
+                    </div>
+
+                    <button type="submit" id="m_btn_signup" class="btn btn-lg btn-success btn-block"
+                            data-loading-text="正在注册...">注册
+                    </button>
+                    <input type="hidden" name="__csrf__"
+                           value="6666cd76f96956469e7be39d750cc7d9_f003d7bc768ee7be43f5420a9110e71d">
+                </form>
+                <p class="text-center" style="margin:10px 0">已有账号?
+                    <a href="" id="togo_login">去登录</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>

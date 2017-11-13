@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TODOLIST</title>
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script scr="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.css"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}} ">
+
+</head>
+<body background="{{ url_for('static',filename='images/maple.jpg') }}">
+
+
+<div class="task_box">
+    <table class="task_box_content">
+        <tr>
+            <th><span class="th_text">Tasks:</span></th>
+            <th></th>
+        </tr>
+
+       <tr >
+            <td></td>
+            <td class="td_style">
+                <span class="glyphicon glyphicon-repeat" style="color:#ffffff; margin-left: 10px;">
+                </span><span class="content_text">python web 学习任务的完成</span>
+            </td>
+
+        </tr>
+        <tr >
+            <td></td>
+            <td class="td_style">
+                <span class="glyphicon glyphicon-repeat" style="color:#ffffff; margin-left: 10px;">
+                </span><span class="content_text">30天之内完成Oracle的调优任务</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td class="td_style">
+                <span class="glyphicon glyphicon-repeat" style="color:#ffffff; margin-left: 10px;">
+                </span><span class="content_text">每天抽取2小时进行Flask的学习</span>
+            </td>
+        </tr>
+
+        <tr class="td_style">
+            <td><span class="glyphicon glyphicon-ok" style="color:#ffffff; margin-left: 10px;"></span> </td>
+            <td><span class="content_text">这是已完成的任务，请注意</span></td>
+        </tr>
+
+
+    </table>
+
+</div>
+
+</body>
+</html>
