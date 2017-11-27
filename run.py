@@ -1,6 +1,6 @@
 from app.models.ext import db
 from app import create_app
-
+from app.controller import user, index, errors, bg_index, task, note
 
 
 app = create_app("DevelopConfig")

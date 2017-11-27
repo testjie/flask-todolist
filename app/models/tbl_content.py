@@ -36,5 +36,6 @@ class Content(db.Model):
         self.status = kwargs.get("status")
         self.type_id = kwargs.get("type_id")
         self.user_id = kwargs.get("user_id")
+        self.title = kwargs.get("title")
         self.keep1 = kwargs.get("keep1")
         self.keep2 = kwargs.get("keep2")

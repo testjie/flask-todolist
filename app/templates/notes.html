@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>笔记</title>
+    <link rel="stylesheet" href="/static/css/manager/amazeui.css"/>
+    <link rel="stylesheet" href="/static/css/manager/core.css"/>
+    <link rel="stylesheet" href="/static/css/manager/menu.css"/>
+    <link rel="stylesheet" href="/static/css/manager/index.css"/>
+    <link rel="stylesheet" href="/static/css/manager/admin.css"/>
+    <link rel="stylesheet" href="/static/css/manager/page/typography.css"/>
+    <link rel="stylesheet" href="/static/css/manager/page/form.css"/>
+    <link rel="stylesheet" href="/static/css/manager/component.css"/>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}} ">
+</head>
+<body background="{{ url_for('static',filename='images/tulip.jpg') }}">
+<!-- Begin page -->
+<nav class="navbar navbar-default">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">
+                <img class="logo" src="">
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="/">首页</a></li>
+                <li><a href="/tasks/">任务</a></li>
+                <li class="active"><a href="/notes/">笔记</a></li>
+            </ul>
+            <form class="navbar-form navbar-left" action="" method="get">
+                <div class="form-group">
+                    <input name="q" type="text" class="form-control" placeholder="请输入关键字">
+                </div>
+                <button type="submit" class="btn btn-default">搜索查看</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                {% if user %}
+                <li><a href="" id="">{{ user.username }}</a></li>
+                <li><a href="/logout/">注销</a></li>
+                {% else %}
+                <li><a href="" id="login">登陆</a></li>
+                <li><a href="" id="reg">注册</a></li>
+                {% endif %}
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+
+<!-- end page -->
+
+
+<div class="admin">
+    <!--<div class="am-g">-->
+    <!-- ========== Left Sidebar Start ========== -->
+    <!--<div class="left side-menu am-hide-sm-only am-u-md-1 am-padding-0">
+        <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 548px;">
+            <div class="sidebar-inner slimscrollleft" style="overflow: hidden; width: auto; height: 548px;">-->
+    <!-- sidebar start -->
+
+    <!-- sidebar end -->
+
+    <!--</div>
+</div>
+</div>-->
+    <!-- ========== Left Sidebar end ========== -->
+
+
+    <!--	<div class="am-g">-->
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <div class="content-page">
+        <!-- Start content -->
+        <div class="content">
+            <div class="card-box">
+                <!-- Row start -->
+                <div class="am-g">
+                    <div class="am-u-sm-12 am-u-md-6">
+                        <div class="am-btn-toolbar">
+                            <div class="am-btn-group am-btn-group-xs">
+                                <button type="button" class="am-btn am-btn-default"><span class="am-icon-plus"></span>
+                                    新增
+                                </button>
+                                <button type="button" class="am-btn am-btn-default"><span class="am-icon-save"></span>
+                                    保存
+                                </button>
+                                <button type="button" class="am-btn am-btn-default"><span
+                                        class="am-icon-archive"></span> 审核
+                                </button>
+                                <button type="button" class="am-btn am-btn-default"><span
+                                        class="am-icon-trash-o"></span> 删除
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="am-u-sm-12 am-u-md-3">
+                        <div class="am-input-group am-input-group-sm">
+                            <input type="text" class="am-form-field">
+                            <span class="am-input-group-btn">
+				            <button class="am-btn am-btn-default" type="button">搜索</button>
+				          </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Row end -->
+
+                <!-- Row start -->
+                <div class="am-g">
+                    <div class="am-u-sm-12">
+                        <form class="am-form">
+                            <table class="am-table am-table-striped am-table-hover table-main">
+                                <thead>
+                                <tr>
+                                    <th class="table-check"><input type="checkbox"/></th>
+                                    <th class="table-id">ID</th>
+                                    <th class="table-title">标题</th>
+                                    <th class="table-type">类别</th>
+                                    <th class="table-author am-hide-sm-only">作者</th>
+                                    <th class="table-date am-hide-sm-only">修改日期</th>
+                                    <th class="table-set">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><input type="checkbox"/></td>
+                                    <td>1</td>
+                                    <td><a href="#">Business management</a></td>
+                                    <td>default</td>
+                                    <td class="am-hide-sm-only">测试1号</td>
+                                    <td class="am-hide-sm-only">2014年9月4日 7:28:47</td>
+                                    <td>
+                                        <div class="am-btn-toolbar">
+                                            <div class="am-btn-group am-btn-group-xs">
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span
+                                                        class="am-icon-pencil-square-o"></span> 编辑
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span
+                                                        class="am-icon-copy"></span> 复制
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only">
+                                                    <span class="am-icon-trash-o"></span> 删除
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"/></td>
+                                    <td>2</td>
+                                    <td><a href="#">Business management</a></td>
+                                    <td>default</td>
+                                    <td class="am-hide-sm-only">测试1号</td>
+                                    <td class="am-hide-sm-only">2014年9月4日 7:28:47</td>
+                                    <td>
+                                        <div class="am-btn-toolbar">
+                                            <div class="am-btn-group am-btn-group-xs">
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span
+                                                        class="am-icon-pencil-square-o"></span> 编辑
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span
+                                                        class="am-icon-copy"></span> 复制
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only">
+                                                    <span class="am-icon-trash-o"></span> 删除
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"/></td>
+                                    <td>3</td>
+                                    <td><a href="#">Business management</a></td>
+                                    <td>default</td>
+                                    <td class="am-hide-sm-only">测试1号</td>
+                                    <td class="am-hide-sm-only">2014年9月4日 7:28:47</td>
+                                    <td>
+                                        <div class="am-btn-toolbar">
+                                            <div class="am-btn-group am-btn-group-xs">
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span
+                                                        class="am-icon-pencil-square-o"></span> 编辑
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span
+                                                        class="am-icon-copy"></span> 复制
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only">
+                                                    <span class="am-icon-trash-o"></span> 删除
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"/></td>
+                                    <td>4</td>
+                                    <td><a href="#">Business management</a></td>
+                                    <td>default</td>
+                                    <td class="am-hide-sm-only">测试1号</td>
+                                    <td class="am-hide-sm-only">2014年9月4日 7:28:47</td>
+                                    <td>
+                                        <div class="am-btn-toolbar">
+                                            <div class="am-btn-group am-btn-group-xs">
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span
+                                                        class="am-icon-pencil-square-o"></span> 编辑
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span
+                                                        class="am-icon-copy"></span> 复制
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only">
+                                                    <span class="am-icon-trash-o"></span> 删除
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"/></td>
+                                    <td>5</td>
+                                    <td><a href="#">Business management</a></td>
+                                    <td>default</td>
+                                    <td class="am-hide-sm-only">测试1号</td>
+                                    <td class="am-hide-sm-only">2014年9月4日 7:28:47</td>
+                                    <td>
+                                        <div class="am-btn-toolbar">
+                                            <div class="am-btn-group am-btn-group-xs">
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span
+                                                        class="am-icon-pencil-square-o"></span> 编辑
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span
+                                                        class="am-icon-copy"></span> 复制
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only">
+                                                    <span class="am-icon-trash-o"></span> 删除
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"/></td>
+                                    <td>6</td>
+                                    <td><a href="#">Business management</a></td>
+                                    <td>default</td>
+                                    <td class="am-hide-sm-only">测试1号</td>
+                                    <td class="am-hide-sm-only">2014年9月4日 7:28:47</td>
+                                    <td>
+                                        <div class="am-btn-toolbar">
+                                            <div class="am-btn-group am-btn-group-xs">
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span
+                                                        class="am-icon-pencil-square-o"></span> 编辑
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span
+                                                        class="am-icon-copy"></span> 复制
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only">
+                                                    <span class="am-icon-trash-o"></span> 删除
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"/></td>
+                                    <td>7</td>
+                                    <td><a href="#">Business management</a></td>
+                                    <td>default</td>
+                                    <td class="am-hide-sm-only">测试1号</td>
+                                    <td class="am-hide-sm-only">2014年9月4日 7:28:47</td>
+                                    <td>
+                                        <div class="am-btn-toolbar">
+                                            <div class="am-btn-group am-btn-group-xs">
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span
+                                                        class="am-icon-pencil-square-o"></span> 编辑
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span
+                                                        class="am-icon-copy"></span> 复制
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only">
+                                                    <span class="am-icon-trash-o"></span> 删除
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"/></td>
+                                    <td>8</td>
+                                    <td><a href="#">Business management</a></td>
+                                    <td>default</td>
+                                    <td class="am-hide-sm-only">测试1号</td>
+                                    <td class="am-hide-sm-only">2014年9月4日 7:28:47</td>
+                                    <td>
+                                        <div class="am-btn-toolbar">
+                                            <div class="am-btn-group am-btn-group-xs">
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span
+                                                        class="am-icon-pencil-square-o"></span> 编辑
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span
+                                                        class="am-icon-copy"></span> 复制
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only">
+                                                    <span class="am-icon-trash-o"></span> 删除
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"/></td>
+                                    <td>9</td>
+                                    <td><a href="#">Business management</a></td>
+                                    <td>default</td>
+                                    <td class="am-hide-sm-only">测试1号</td>
+                                    <td class="am-hide-sm-only">2014年9月4日 7:28:47</td>
+                                    <td>
+                                        <div class="am-btn-toolbar">
+                                            <div class="am-btn-group am-btn-group-xs">
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span
+                                                        class="am-icon-pencil-square-o"></span> 编辑
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span
+                                                        class="am-icon-copy"></span> 复制
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only">
+                                                    <span class="am-icon-trash-o"></span> 删除
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"/></td>
+                                    <td>10</td>
+                                    <td><a href="#">Business management</a></td>
+                                    <td>default</td>
+                                    <td class="am-hide-sm-only">测试1号</td>
+                                    <td class="am-hide-sm-only">2014年9月4日 7:28:47</td>
+                                    <td>
+                                        <div class="am-btn-toolbar">
+                                            <div class="am-btn-group am-btn-group-xs">
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span
+                                                        class="am-icon-pencil-square-o"></span> 编辑
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span
+                                                        class="am-icon-copy"></span> 复制
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only">
+                                                    <span class="am-icon-trash-o"></span> 删除
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"/></td>
+                                    <td>11</td>
+                                    <td><a href="#">Business management</a></td>
+                                    <td>default</td>
+                                    <td class="am-hide-sm-only">测试1号</td>
+                                    <td class="am-hide-sm-only">2014年9月4日 7:28:47</td>
+                                    <td>
+                                        <div class="am-btn-toolbar">
+                                            <div class="am-btn-group am-btn-group-xs">
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span
+                                                        class="am-icon-pencil-square-o"></span> 编辑
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span
+                                                        class="am-icon-copy"></span> 复制
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only">
+                                                    <span class="am-icon-trash-o"></span> 删除
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"/></td>
+                                    <td>12</td>
+                                    <td><a href="#">Business management</a></td>
+                                    <td>default</td>
+                                    <td class="am-hide-sm-only">测试1号</td>
+                                    <td class="am-hide-sm-only">2014年9月4日 7:28:47</td>
+                                    <td>
+                                        <div class="am-btn-toolbar">
+                                            <div class="am-btn-group am-btn-group-xs">
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span
+                                                        class="am-icon-pencil-square-o"></span> 编辑
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span
+                                                        class="am-icon-copy"></span> 复制
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only">
+                                                    <span class="am-icon-trash-o"></span> 删除
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"/></td>
+                                    <td>13</td>
+                                    <td><a href="#">Business management</a></td>
+                                    <td>default</td>
+                                    <td class="am-hide-sm-only">测试1号</td>
+                                    <td class="am-hide-sm-only">2014年9月4日 7:28:47</td>
+                                    <td>
+                                        <div class="am-btn-toolbar">
+                                            <div class="am-btn-group am-btn-group-xs">
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span
+                                                        class="am-icon-pencil-square-o"></span> 编辑
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span
+                                                        class="am-icon-copy"></span> 复制
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only">
+                                                    <span class="am-icon-trash-o"></span> 删除
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"/></td>
+                                    <td>14</td>
+                                    <td><a href="#">Business management</a></td>
+                                    <td>default</td>
+                                    <td class="am-hide-sm-only">测试14号</td>
+                                    <td class="am-hide-sm-only">2014年9月4日 7:28:47</td>
+                                    <td>
+                                        <div class="am-btn-toolbar">
+                                            <div class="am-btn-group am-btn-group-xs">
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span
+                                                        class="am-icon-pencil-square-o"></span> 编辑
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span
+                                                        class="am-icon-copy"></span> 复制
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only">
+                                                    <span class="am-icon-trash-o"></span> 删除
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"/></td>
+                                    <td>15</td>
+                                    <td><a href="#">Business management</a></td>
+                                    <td>default</td>
+                                    <td class="am-hide-sm-only">测试1号</td>
+                                    <td class="am-hide-sm-only">2014年9月4日 7:28:47</td>
+                                    <td>
+                                        <div class="am-btn-toolbar">
+                                            <div class="am-btn-group am-btn-group-xs">
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span
+                                                        class="am-icon-pencil-square-o"></span> 编辑
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span
+                                                        class="am-icon-copy"></span> 复制
+                                                </button>
+                                                <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only">
+                                                    <span class="am-icon-trash-o"></span> 删除
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="am-cf">
+                                共 15 条记录
+                                <div class="am-fr">
+                                    <ul class="am-pagination">
+                                        <li class="am-disabled"><a href="#">«</a></li>
+                                        <li class="am-active"><a href="#">1</a></li>
+                                        <li><a href="#">2</a></li>
+                                        <li><a href="#">3</a></li>
+                                        <li><a href="#">4</a></li>
+                                        <li><a href="#">5</a></li>
+                                        <li><a href="#">»</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <hr/>
+                            <p>注：.....</p>
+                        </form>
+                    </div>
+
+                </div>
+                <!-- Row end -->
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+</div>
+<!-- end right Content here -->
+<!--</div>-->
+</div>
+</div>
+
+<!-- navbar -->
+<a href="admin-offcanvas" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu"
+   data-am-offcanvas="{target: '#admin-offcanvas'}"><!--<i class="fa fa-bars" aria-hidden="true"></i>--></a>
+
+<script type="text/javascript" src="/static/js/manager/jquery-2.1.0.js"></script>
+<script type="text/javascript" src="/static/js/manager/amazeui.min.js"></script>
+<script type="text/javascript" src="/static/js/manager/app.js"></script>
+<script type="text/javascript" src="/static/js/manager/blockUI.js"></script>
+
+</body>
+
+</html>

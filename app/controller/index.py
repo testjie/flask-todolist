@@ -5,7 +5,7 @@ from app.models.tbl_content_type import ContentType
 from app.models.tbl_content import Content
 from app.models.ext import db
 from sqlalchemy import desc
-
+from app.controller import vues
 
 @bp.route("/")
 def index():
@@ -27,7 +27,6 @@ def index():
 
         if user.content_types:
             context = {
-                "user": user,
                 "tasks": tasks,
                 "note": notes
             }
