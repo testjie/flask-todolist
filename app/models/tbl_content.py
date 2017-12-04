@@ -2,7 +2,6 @@ from app.models.ext import db
 from datetime import datetime
 from app.models.tbl_content_type import ContentType
 
-
 """
     id : 自增
     titme：笔记本标题，类型为任务时，此字段可以为空
@@ -14,6 +13,7 @@ from app.models.tbl_content_type import ContentType
     keep1：保留字段1
     keep2：保留字段2
 """
+
 
 class Content(db.Model):
     __tablename__ = "tbl_content"
@@ -28,8 +28,6 @@ class Content(db.Model):
     keep2 = db.Column(db.String(100), nullable=True)
 
     content_type = db.relationship("ContentType", backref=db.backref("contents"))
-
-
 
     def __init__(self, **kwargs):
         self.content = kwargs.get("content")

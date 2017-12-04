@@ -107,7 +107,6 @@ class abstractproperty(property):
 
 
 class ABCMeta(type):
-
     """Metaclass for defining Abstract Base Classes (ABCs).
 
     Use this metaclass to create an ABC.  An ABC can be subclassed
@@ -184,8 +183,8 @@ class ABCMeta(type):
         subtype = type(instance)
         if subtype is subclass:
             if (cls._abc_negative_cache_version ==
-                ABCMeta._abc_invalidation_counter and
-                subclass in cls._abc_negative_cache):
+                    ABCMeta._abc_invalidation_counter and
+                        subclass in cls._abc_negative_cache):
                 return False
             # Fall back to the subclass check.
             return cls.__subclasscheck__(subclass)

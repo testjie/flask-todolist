@@ -1,6 +1,6 @@
 from flask import render_template
-from app.controller import bp
-from app.controller import vues
+from app.api_1_0 import bp
+from app.api_1_0 import vues
 
 
 @bp.route("/notes/")

@@ -1,11 +1,12 @@
 from flask import render_template, request, session
-from app.controller import bp
+from app.api_1_0 import bp
 from app.models.tbl_user import User
 from app.models.tbl_content_type import ContentType
 from app.models.tbl_content import Content
 from app.models.ext import db
 from sqlalchemy import desc
-from app.controller import vues
+from app.api_1_0 import vues
+
 
 @bp.route("/")
 def index():

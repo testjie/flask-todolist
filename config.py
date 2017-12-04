@@ -1,17 +1,20 @@
 import os
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-
+DeploymentContig = {
+    "project_home": "c:\\user\\snake\\testcode\\"
+}
 
 
 class DevelopConfig:
     # PYMYSQL数据库的配置变量
     HOSTNAME = '192.168.1.88'
-    PORT     = '3306'
+    PORT = '3306'
     DATABASE = 'flask_todolist'
     USERNAME = 'root'
     PASSWORD = '123456'
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{}:{}@{}:{}/{}'.format(USERNAME,PASSWORD,HOSTNAME,PORT,DATABASE)
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{}:{}@{}:{}/{}'.format(USERNAME, PASSWORD, HOSTNAME, PORT, DATABASE)
 
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
@@ -23,7 +26,6 @@ class DevelopConfig:
     SECRET_KEY = os.urandom(24)
 
 
-
 config = {
-    "DevelopConfig":DevelopConfig
+    "DevelopConfig": DevelopConfig
 }

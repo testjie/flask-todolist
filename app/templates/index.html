@@ -5,7 +5,8 @@
     <title>TODOLIST</title>
     <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
-    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/index.js')}}"></script>
 
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -50,17 +51,16 @@
             </form>
             <ul class="nav navbar-nav navbar-right">
                 {% if user %}
-                    <li><a href="" id="">{{ user.username }}</a></li>
-                    <li><a href="/logout/">注销</a></li>
+                <li><a href="" id="">{{ user.username }}</a></li>
+                <li><a href="/logout/">注销</a></li>
                 {% else %}
-                    <li><a href="" id="login">登陆</a></li>
-                    <li><a href="" id="reg">注册</a></li>
+                <li><a href="" id="login">登陆</a></li>
+                <li><a href="" id="reg">注册</a></li>
                 {% endif %}
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
-
 
 
 <!-- 代码区 -->
@@ -75,40 +75,40 @@
 
         <!-- tasks -->
         {% if tasks %}
-                {% for task in tasks %}
-                    {% if task.status == 2 %}
-                        <div class="unfinish_background_color" style="margin-left: 35px;">
-                            <a href="" title="激活" style="text-decoration : none ">
-                                <span class="glyphicon glyphicon-repeat ok_style" ></span>
-                            </a>
-                            <span class="content_text">{{ task.title }}</span>
-                        </div>
-                    {% else %}
-                        <div class="finished_background_color">
-                            <a href="" title="完成" style="text-decoration : none ">
-                                <span class="glyphicon glyphicon-ok ok_style"></span>
-                            </a>
-                            <span class="content_text">{{ task.title }}</span>
-                        </div>
-                    {% endif %}
-                {% endfor %}
+        {% for task in tasks %}
+        {% if task.status == 2 %}
+        <div class="unfinish_background_color" style="margin-left: 35px;">
+            <a href="javascript:;" title="激活" style="text-decoration : none " name="{{ task.id }}"
+               onclick="active_task(this)">
+                <span class="glyphicon glyphicon-repeat ok_style"></span>
+            </a>
+            <span class="content_text">{{ task.title }}</span>
+        </div>
         {% else %}
-            <div class="finished_background_color" style="margin-left: 35px;">
+        <div class="finished_background_color">
+            <a href="" title="完成" style="text-decoration : none " name="{{ task.id }}" onclick="finish_task(this)">
                 <span class="glyphicon glyphicon-ok ok_style"></span>
-                <span class="content_text">想要使用TODOList吗？</span>
-            </div>
-            <div class="finished_background_color" style="margin-left: 35px;">
-                <span class="glyphicon glyphicon-ok ok_style"></span>
-                <span class="content_text">请先登陆或者注册吧   O(∩_∩)O哈哈哈~</span>
-            </div>
-            <div class="finished_background_color" style="margin-left: 35px;">
-                <span class="glyphicon glyphicon-ok ok_style"></span>
-                <span class="content_text"> ---- 东京热 2017.11.11</span>
-            </div>
+            </a>
+            <span class="content_text">{{ task.title }}</span>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% else %}
+        <div class="finished_background_color" style="margin-left: 35px;">
+            <span class="glyphicon glyphicon-ok ok_style"></span>
+            <span class="content_text">想要使用TODOList吗？</span>
+        </div>
+        <div class="finished_background_color" style="margin-left: 35px;">
+            <span class="glyphicon glyphicon-ok ok_style"></span>
+            <span class="content_text">请先登陆或者注册吧   O(∩_∩)O哈哈哈~</span>
+        </div>
+        <div class="finished_background_color" style="margin-left: 35px;">
+            <span class="glyphicon glyphicon-ok ok_style"></span>
+            <span class="content_text"> ---- 东京热 2017.11.11</span>
+        </div>
 
         {% endif %}
     </div>
-
 
 
     <!-- note -->
@@ -200,7 +200,6 @@
         </div>
     </div>
 </div>
-
 
 
 </body>

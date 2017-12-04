@@ -33,7 +33,7 @@ __name__ = "collections.abc"
 # are not included on this list.
 bytes_iterator = type(iter(b''))
 bytearray_iterator = type(iter(bytearray()))
-#callable_iterator = ???
+# callable_iterator = ???
 dict_keyiterator = type(iter({}.keys()))
 dict_valueiterator = type(iter({}.values()))
 dict_itemiterator = type(iter({}.items()))
@@ -55,7 +55,6 @@ mappingproxy = type(type.__dict__)
 ### ONE-TRICK PONIES ###
 
 class Hashable(metaclass=ABCMeta):
-
     __slots__ = ()
 
     @abstractmethod
@@ -74,7 +73,6 @@ class Hashable(metaclass=ABCMeta):
 
 
 class Iterable(metaclass=ABCMeta):
-
     __slots__ = ()
 
     @abstractmethod
@@ -91,7 +89,6 @@ class Iterable(metaclass=ABCMeta):
 
 
 class Iterator(Iterable):
-
     __slots__ = ()
 
     @abstractmethod
@@ -106,13 +103,14 @@ class Iterator(Iterable):
     def __subclasshook__(cls, C):
         if cls is Iterator:
             if (any("__next__" in B.__dict__ for B in C.__mro__) and
-                any("__iter__" in B.__dict__ for B in C.__mro__)):
+                    any("__iter__" in B.__dict__ for B in C.__mro__)):
                 return True
         return NotImplemented
 
+
 Iterator.register(bytes_iterator)
 Iterator.register(bytearray_iterator)
-#Iterator.register(callable_iterator)
+# Iterator.register(callable_iterator)
 Iterator.register(dict_keyiterator)
 Iterator.register(dict_valueiterator)
 Iterator.register(dict_itemiterator)
@@ -124,8 +122,8 @@ Iterator.register(str_iterator)
 Iterator.register(tuple_iterator)
 Iterator.register(zip_iterator)
 
-class Sized(metaclass=ABCMeta):
 
+class Sized(metaclass=ABCMeta):
     __slots__ = ()
 
     @abstractmethod
@@ -141,7 +139,6 @@ class Sized(metaclass=ABCMeta):
 
 
 class Container(metaclass=ABCMeta):
-
     __slots__ = ()
 
     @abstractmethod
@@ -157,7 +154,6 @@ class Container(metaclass=ABCMeta):
 
 
 class Callable(metaclass=ABCMeta):
-
     __slots__ = ()
 
     @abstractmethod
@@ -176,7 +172,6 @@ class Callable(metaclass=ABCMeta):
 
 
 class Set(Sized, Iterable, Container):
-
     """A set is a finite, iterable container.
 
     This class provides concrete generic implementations of all
@@ -302,7 +297,7 @@ class Set(Sized, Iterable, Container):
         h &= MASK
         for x in self:
             hx = hash(x)
-            h ^= (hx ^ (hx << 16) ^ 89869747)  * 3644798167
+            h ^= (hx ^ (hx << 16) ^ 89869747) * 3644798167
             h &= MASK
         h = h * 69069 + 907133923
         h &= MASK
@@ -311,6 +306,7 @@ class Set(Sized, Iterable, Container):
         if h == -1:
             h = 590923713
         return h
+
 
 Set.register(frozenset)
 
@@ -394,6 +390,7 @@ class MutableSet(Set):
                 self.discard(value)
         return self
 
+
 MutableSet.register(set)
 
 
@@ -401,7 +398,6 @@ MutableSet.register(set)
 
 
 class Mapping(Sized, Iterable, Container):
-
     __slots__ = ()
 
     """A Mapping is a generic container for associating key/value
@@ -448,11 +444,11 @@ class Mapping(Sized, Iterable, Container):
             return NotImplemented
         return dict(self.items()) == dict(other.items())
 
+
 Mapping.register(mappingproxy)
 
 
 class MappingView(Sized):
-
     def __init__(self, mapping):
         self._mapping = mapping
 
@@ -464,7 +460,6 @@ class MappingView(Sized):
 
 
 class KeysView(MappingView, Set):
-
     @classmethod
     def _from_iterable(self, it):
         return set(it)
@@ -475,11 +470,11 @@ class KeysView(MappingView, Set):
     def __iter__(self):
         yield from self._mapping
 
+
 KeysView.register(dict_keys)
 
 
 class ItemsView(MappingView, Set):
-
     @classmethod
     def _from_iterable(self, it):
         return set(it)
@@ -497,11 +492,11 @@ class ItemsView(MappingView, Set):
         for key in self._mapping:
             yield (key, self._mapping[key])
 
+
 ItemsView.register(dict_items)
 
 
 class ValuesView(MappingView):
-
     def __contains__(self, value):
         for key in self._mapping:
             if value == self._mapping[key]:
@@ -512,11 +507,11 @@ class ValuesView(MappingView):
         for key in self._mapping:
             yield self._mapping[key]
 
+
 ValuesView.register(dict_values)
 
 
 class MutableMapping(Mapping):
-
     __slots__ = ()
 
     """A MutableMapping is a generic container for associating
@@ -607,6 +602,7 @@ class MutableMapping(Mapping):
             self[key] = default
         return default
 
+
 MutableMapping.register(dict)
 
 
@@ -614,7 +610,6 @@ MutableMapping.register(dict)
 
 
 class Sequence(Sized, Iterable, Container):
-
     """All the operations on a read-only sequence.
 
     Concrete subclasses must override __new__ or __init__,
@@ -660,6 +655,7 @@ class Sequence(Sized, Iterable, Container):
         'S.count(value) -> integer -- return number of occurrences of value'
         return sum(1 for v in self if v == value)
 
+
 Sequence.register(tuple)
 Sequence.register(str)
 Sequence.register(range)
@@ -667,7 +663,6 @@ Sequence.register(memoryview)
 
 
 class ByteString(Sequence):
-
     """This unifies bytes and bytearray.
 
     XXX Should add all their methods.
@@ -675,12 +670,12 @@ class ByteString(Sequence):
 
     __slots__ = ()
 
+
 ByteString.register(bytes)
 ByteString.register(bytearray)
 
 
 class MutableSequence(Sequence):
-
     __slots__ = ()
 
     """All the operations on a read-write sequence.
@@ -718,8 +713,8 @@ class MutableSequence(Sequence):
     def reverse(self):
         'S.reverse() -- reverse *IN PLACE*'
         n = len(self)
-        for i in range(n//2):
-            self[i], self[n-i-1] = self[n-i-1], self[i]
+        for i in range(n // 2):
+            self[i], self[n - i - 1] = self[n - i - 1], self[i]
 
     def extend(self, values):
         'S.extend(iterable) -- extend sequence by appending elements from the iterable'
@@ -743,6 +738,7 @@ class MutableSequence(Sequence):
     def __iadd__(self, values):
         self.extend(values)
         return self
+
 
 MutableSequence.register(list)
 MutableSequence.register(bytearray)  # Multiply inheriting, see ByteString

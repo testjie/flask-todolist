@@ -1,8 +1,7 @@
-from app.controller import bp
+from app.api_1_0 import bp
 from flask import request, render_template, redirect, session, url_for
 from app.models.tbl_user import User
 from app.models.ext import db
-
 
 
 @bp.route("/login/", methods=['POST'])
@@ -22,7 +21,7 @@ def user_login():
             return "用户名或密码错误"
 
 
-@bp.route("/reg/",methods=['POST'])
+@bp.route("/reg/", methods=['POST'])
 def user_reg():
     username = request.form.get("username")
     password = request.form.get("password")
@@ -34,14 +33,13 @@ def user_reg():
         return "邀请码不正确"
 
     user = User(username=username, password=password, usertype=100)
-
     db.session.add(user)
     db.session.commit()
 
     return redirect("index.html")
 
 
-@bp.route("/logout/", methods=['GET','POST'])
+@bp.route("/logout/", methods=['GET', 'POST'])
 def logout():
     session.clear()
     return redirect(url_for("bp.index"))

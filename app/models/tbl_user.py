@@ -12,6 +12,7 @@ from datetime import datetime
     keep2：保留字段2
 """
 
+
 class User(db.Model):
     __tablename__ = "tbl_user"
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
@@ -28,5 +29,3 @@ class User(db.Model):
         self.usertype = kwargs.get("usertype")
         self.keep1 = kwargs.get("kekp1")
         self.keep2 = kwargs.get("keep2")
-
-

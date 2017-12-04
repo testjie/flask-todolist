@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
 <head>
     <meta charset="utf-8"/>
@@ -16,6 +16,18 @@
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <!-- navbar -->
+    <a href="admin-offcanvas" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu"
+       data-am-offcanvas="{target: '#admin-offcanvas'}"><!--<i class="fa fa-bars" aria-hidden="true"></i>--></a>
+
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/manager/jquery-2.1.0.js"></script>
+    <script type="text/javascript" src="/static/js/manager/amazeui.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/static/js/task.js"></script>
+
 
 </head>
 <body>
@@ -82,6 +94,29 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
+<div class="modal fade" id="update_task" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel1">修改任务</h4>
+            </div>
+            <div class="modal-body form-inline">
+                <input type="text" id="task_content1" class="form-control" placeholder="请输入任务..."
+                       style="width:75%;"></input>
+                <select class="form-control" id="task_status_update">
+                    <option value="2">已完成</option>
+                    <option value="1">未完成</option>
+                </select>
+                <input type="hidden" id="task_id_getter" value=""/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="submit" id="update_task_but" class="btn btn-primary" data-dismiss="modal">提交</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 
 
 <div class="admin" style="width: auto; margin-top: auto; margin-left: auto;">
@@ -99,10 +134,7 @@
                                         data-target="#add_task"><span class="am-icon-plus"></span>
                                     新增
                                 </button>
-                                <button type="button" class="am-btn am-btn-default"><span class="am-icon-save"></span>
-                                    保存
-                                </button>
-                                <button type="button" class="am-btn am-btn-default"><span
+                                <button id="del_task" type="button" class="am-btn am-btn-default"><span
                                         class="am-icon-trash-o"></span> 删除
                                 </button>
                             </div>
@@ -115,10 +147,11 @@
                 <div class="am-g">
                     <div class="am-u-sm-12">
                         <form class="am-form">
-                            <table class="am-table am-table-striped am-table-hover table-main">
+                            <table class="am-table am-table-striped am-table-hover table-main" id="task_table">
                                 <thead>
                                 <tr>
-                                    <th class="table-check"><input type="checkbox"/></th>
+                                    <th class="table-check"><input type="checkbox" id="all_checkbox"
+                                                                   name="all_checkbox"/></th>
                                     <th class="table-id">ID</th>
                                     <th class="table-title">标题</th>
                                     <th class="table-title">状态</th>
@@ -126,54 +159,17 @@
                                     <th class="table-set">操作</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                {% if tasks %}
-                                {% for content in tasks %}
-                                <tr>
-                                    <td><input type="checkbox"/></td>
-                                    <td>{{ content.id }}</td>
-                                    <td><a href="#">{{ content.title }}</a></td>
-                                    {% if content.status == 1 %}
-                                    <td>未完成</td>
-                                    {% else %}
-                                    <td>已完成</td>
-                                    {% endif %}
-                                    <td class="am-hide-sm-only">{{ content.create_time }}</td>
-                                    <td>
-                                        <div class="am-btn-toolbar">
-                                            <div class="am-btn-group am-btn-group-xs">
-                                                <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span
-                                                        class="am-icon-pencil-square-o"></span> 编辑
-                                                </button>
-                                                <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span
-                                                        class="am-icon-copy"></span> 复制
-                                                </button>
-                                                <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only">
-                                                    <span class="am-icon-trash-o"></span> 删除
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                {% endfor %}
 
-                                {% endif %}
+                                <tbody>
 
                                 </tbody>
+
                             </table>
                             <div class="am-cf">
-                                {% if tasks %}
-                                共 {{ tasks|length }} 条记录
-                                {% endif %}
+                                共 <label id="total_page"></label> 条记录
                                 <div class="am-fr">
-                                    <ul class="am-pagination">
-                                        <li class="am-disabled"><a href="#">«</a></li>
-                                        {% if page_no %}
-                                        {% for i in range(1,page_no+1) %}
-                                        <li class="am-active"><a href="#">{{ i }}</a></li>
-                                        {% endfor %}
-                                        {% endif %}
-                                        <li><a href="#">»</a></li>
+                                    <ul class="am-pagination" id="fenye">
+
                                     </ul>
                                 </div>
                             </div>
@@ -194,18 +190,6 @@
 </div>
 </div>
 
-<!-- navbar -->
-<a href="admin-offcanvas" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu"
-   data-am-offcanvas="{target: '#admin-offcanvas'}"><!--<i class="fa fa-bars" aria-hidden="true"></i>--></a>
-
-<script type="text/javascript" src="/static/js/manager/jquery-2.1.0.js"></script>
-<script type="text/javascript" src="/static/js/manager/amazeui.min.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-<script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
-        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-        crossorigin="anonymous"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/index.js')}}"></script>
-<script type="text/javascript" src="/static/js/task.js"></script>
 
 </body>
 

@@ -1,5 +1,5 @@
 
 1. Flask环境
-2. SQLAchemy
-3. PlSQL
-4.
+2. SQLAchemy：数据库框架
+3. PlSQL：数据库连接驱动
+4. Flaks-testing：单元测试

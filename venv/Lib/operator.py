@@ -28,25 +28,31 @@ def lt(a, b):
     "Same as a < b."
     return a < b
 
+
 def le(a, b):
     "Same as a <= b."
     return a <= b
+
 
 def eq(a, b):
     "Same as a == b."
     return a == b
 
+
 def ne(a, b):
     "Same as a != b."
     return a != b
+
 
 def ge(a, b):
     "Same as a >= b."
     return a >= b
 
+
 def gt(a, b):
     "Same as a > b."
     return a > b
+
 
 # Logical Operations **********************************************************#
 
@@ -54,17 +60,21 @@ def not_(a):
     "Same as not a."
     return not a
 
+
 def truth(a):
     "Return True if a is true, False otherwise."
     return True if a else False
+
 
 def is_(a, b):
     "Same as a is b."
     return a is b
 
+
 def is_not(a, b):
     "Same as a is not b."
     return a is not b
+
 
 # Mathematical/Bitwise Operations *********************************************#
 
@@ -72,70 +82,89 @@ def abs(a):
     "Same as abs(a)."
     return _abs(a)
 
+
 def add(a, b):
     "Same as a + b."
     return a + b
+
 
 def and_(a, b):
     "Same as a & b."
     return a & b
 
+
 def floordiv(a, b):
     "Same as a // b."
     return a // b
+
 
 def index(a):
     "Same as a.__index__()."
     return a.__index__()
 
+
 def inv(a):
     "Same as ~a."
     return ~a
+
+
 invert = inv
+
 
 def lshift(a, b):
     "Same as a << b."
     return a << b
 
+
 def mod(a, b):
     "Same as a % b."
     return a % b
+
 
 def mul(a, b):
     "Same as a * b."
     return a * b
 
+
 def neg(a):
     "Same as -a."
     return -a
+
 
 def or_(a, b):
     "Same as a | b."
     return a | b
 
+
 def pos(a):
     "Same as +a."
     return +a
+
 
 def pow(a, b):
     "Same as a ** b."
     return a ** b
 
+
 def rshift(a, b):
     "Same as a >> b."
     return a >> b
+
 
 def sub(a, b):
     "Same as a - b."
     return a - b
 
+
 def truediv(a, b):
     "Same as a / b."
     return a / b
 
+
 def xor(a, b):
     "Same as a ^ b."
     return a ^ b
+
 
 # Sequence Operations *********************************************************#
 
@@ -146,9 +175,11 @@ def concat(a, b):
         raise TypeError(msg)
     return a + b
 
+
 def contains(a, b):
     "Same as b in a (note reversed operands)."
     return b in a
+
 
 def countOf(a, b):
     "Return the number of times b occurs in a."
@@ -158,13 +189,16 @@ def countOf(a, b):
             count += 1
     return count
 
+
 def delitem(a, b):
     "Same as del a[b]."
     del a[b]
 
+
 def getitem(a, b):
     "Same as a[b]."
     return a[b]
+
 
 def indexOf(a, b):
     "Return the first index of b in a."
@@ -174,9 +208,11 @@ def indexOf(a, b):
     else:
         raise ValueError('sequence.index(x): x not in sequence')
 
+
 def setitem(a, b, c):
     "Same as a[b] = c."
     a[b] = c
+
 
 def length_hint(obj, default=0):
     """
@@ -217,6 +253,7 @@ def length_hint(obj, default=0):
         raise ValueError(msg)
     return val
 
+
 # Generalized Lookup Objects **************************************************#
 
 class attrgetter:
@@ -227,24 +264,30 @@ class attrgetter:
     After h = attrgetter('name.first', 'name.last'), the call h(r) returns
     (r.name.first, r.name.last).
     """
+
     def __init__(self, attr, *attrs):
         if not attrs:
             if not isinstance(attr, str):
                 raise TypeError('attribute name must be a string')
             names = attr.split('.')
+
             def func(obj):
                 for name in names:
                     obj = getattr(obj, name)
                 return obj
+
             self._call = func
         else:
             getters = tuple(map(attrgetter, (attr,) + attrs))
+
             def func(obj):
                 return tuple(getter(obj) for getter in getters)
+
             self._call = func
 
     def __call__(self, obj):
         return self._call(obj)
+
 
 class itemgetter:
     """
@@ -252,19 +295,24 @@ class itemgetter:
     After f = itemgetter(2), the call f(r) returns r[2].
     After g = itemgetter(2, 5, 3), the call g(r) returns (r[2], r[5], r[3])
     """
+
     def __init__(self, item, *items):
         if not items:
             def func(obj):
                 return obj[item]
+
             self._call = func
         else:
             items = (item,) + items
+
             def func(obj):
                 return tuple(obj[i] for i in items)
+
             self._call = func
 
     def __call__(self, obj):
         return self._call(obj)
+
 
 class methodcaller:
     """
@@ -286,6 +334,7 @@ class methodcaller:
     def __call__(self, obj):
         return getattr(obj, self._name)(*self._args, **self._kwargs)
 
+
 # In-place Operations *********************************************************#
 
 def iadd(a, b):
@@ -293,10 +342,12 @@ def iadd(a, b):
     a += b
     return a
 
+
 def iand(a, b):
     "Same as a &= b."
     a &= b
     return a
+
 
 def iconcat(a, b):
     "Same as a += b, for a and b sequences."
@@ -306,50 +357,60 @@ def iconcat(a, b):
     a += b
     return a
 
+
 def ifloordiv(a, b):
     "Same as a //= b."
     a //= b
     return a
+
 
 def ilshift(a, b):
     "Same as a <<= b."
     a <<= b
     return a
 
+
 def imod(a, b):
     "Same as a %= b."
     a %= b
     return a
+
 
 def imul(a, b):
     "Same as a *= b."
     a *= b
     return a
 
+
 def ior(a, b):
     "Same as a |= b."
     a |= b
     return a
 
+
 def ipow(a, b):
     "Same as a **= b."
-    a **=b
+    a **= b
     return a
+
 
 def irshift(a, b):
     "Same as a >>= b."
     a >>= b
     return a
 
+
 def isub(a, b):
     "Same as a -= b."
     a -= b
     return a
 
+
 def itruediv(a, b):
     "Same as a /= b."
     a /= b
     return a
+
 
 def ixor(a, b):
     "Same as a ^= b."

@@ -1,4 +1,4 @@
-#.  Copyright (C) 2005-2010   Gregory P. Smith (greg@krypto.org)
+# .  Copyright (C) 2005-2010   Gregory P. Smith (greg@krypto.org)
 #  Licensed to PSF under a Contributor Agreement.
 #
 
@@ -62,8 +62,8 @@ algorithms_available = set(__always_supported)
 __all__ = __always_supported + ('new', 'algorithms_guaranteed',
                                 'algorithms_available', 'pbkdf2_hmac')
 
-
 __builtin_constructor_cache = {}
+
 
 def __get_builtin_constructor(name):
     cache = __builtin_constructor_cache
@@ -130,10 +130,11 @@ def __hash_new(name, data=b''):
 
 try:
     import _hashlib
+
     new = __hash_new
     __get_hash = __get_openssl_constructor
     algorithms_available = algorithms_available.union(
-            _hashlib.openssl_md_meth_names)
+        _hashlib.openssl_md_meth_names)
 except ImportError:
     new = __py_new
     __get_hash = __get_builtin_constructor
@@ -144,6 +145,7 @@ try:
 except ImportError:
     _trans_5C = bytes((x ^ 0x5C) for x in range(256))
     _trans_36 = bytes((x ^ 0x36) for x in range(256))
+
 
     def pbkdf2_hmac(hash_name, password, salt, iterations, dklen=None):
         """Password based key derivation function 2 (PKCS #5 v2.0)
@@ -202,7 +204,6 @@ except ImportError:
 
         return dkey[:dklen]
 
-
 for __func_name in __always_supported:
     # try them all, some may not work due to the OpenSSL
     # version not supporting that algorithm.
@@ -210,6 +211,7 @@ for __func_name in __always_supported:
         globals()[__func_name] = __get_hash(__func_name)
     except ValueError:
         import logging
+
         logging.exception('code for hash %s was not found.', __func_name)
 
 # Cleanup locals()

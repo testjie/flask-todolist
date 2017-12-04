@@ -1,5 +1,5 @@
 from flask import render_template
-from app.controller import bp
+from app.api_1_0 import bp
 
 
 @bp.route("/bg_index/", methods=['GET'])

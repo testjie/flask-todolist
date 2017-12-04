@@ -3,28 +3,37 @@ Define names for built-in types that aren't directly accessible as a builtin.
 """
 import sys
 
+
 # Iterators in Python aren't a matter of type but of protocol.  A large
 # and changing number of builtin types implement *some* flavor of
 # iterator.  Don't check the type!  Use hasattr to check for both
 # "__iter__" and "__next__" attributes instead.
 
 def _f(): pass
+
+
 FunctionType = type(_f)
-LambdaType = type(lambda: None)         # Same as FunctionType
+LambdaType = type(lambda: None)  # Same as FunctionType
 CodeType = type(_f.__code__)
 MappingProxyType = type(type.__dict__)
 SimpleNamespace = type(sys.implementation)
 
+
 def _g():
     yield 1
+
+
 GeneratorType = type(_g())
+
 
 class _C:
     def _m(self): pass
+
+
 MethodType = type(_C()._m)
 
 BuiltinFunctionType = type(len)
-BuiltinMethodType = type([].append)     # Same as BuiltinFunctionType
+BuiltinMethodType = type([].append)  # Same as BuiltinFunctionType
 
 ModuleType = type(sys)
 
@@ -34,13 +43,14 @@ except TypeError:
     tb = sys.exc_info()[2]
     TracebackType = type(tb)
     FrameType = type(tb.tb_frame)
-    tb = None; del tb
+    tb = None;
+    del tb
 
 # For Jython, the following two types are identical
 GetSetDescriptorType = type(FunctionType.__code__)
 MemberDescriptorType = type(FunctionType.__globals__)
 
-del sys, _f, _g, _C,                              # Not for export
+del sys, _f, _g, _C,  # Not for export
 
 
 # Provide a PEP 3115 compliant mechanism for class creation
@@ -50,6 +60,7 @@ def new_class(name, bases=(), kwds=None, exec_body=None):
     if exec_body is not None:
         exec_body(ns)
     return meta(name, bases, ns, **kwds)
+
 
 def prepare_class(name, bases=(), kwds=None):
     """Call the __prepare__ method of the appropriate metaclass.
@@ -65,7 +76,7 @@ def prepare_class(name, bases=(), kwds=None):
     if kwds is None:
         kwds = {}
     else:
-        kwds = dict(kwds) # Don't alter the provided mapping
+        kwds = dict(kwds)  # Don't alter the provided mapping
     if 'metaclass' in kwds:
         meta = kwds.pop('metaclass')
     else:
@@ -82,6 +93,7 @@ def prepare_class(name, bases=(), kwds=None):
     else:
         ns = {}
     return meta, ns, kwds
+
 
 def _calculate_meta(meta, bases):
     """Calculate the most derived metaclass."""
@@ -100,6 +112,7 @@ def _calculate_meta(meta, bases):
                         "of the metaclasses of all its bases")
     return winner
 
+
 class DynamicClassAttribute:
     """Route attribute access on a class to __getattr__.
 
@@ -112,6 +125,7 @@ class DynamicClassAttribute:
     attributes on the class with the same name (see Enum for an example).
 
     """
+
     def __init__(self, fget=None, fset=None, fdel=None, doc=None):
         self.fget = fget
         self.fset = fset
