@@ -18,15 +18,16 @@ def index():
         """
         tasks = Content.query.join(ContentType).filter(
             ContentType.content_type == 1, ContentType.user_id == user.id,
-            ContentType.content_type == Content.type_id).order_by(
+            Content.type_id == ContentType.id).order_by(
             Content.status.desc()).all()
 
         notes = Content.query.join(ContentType).filter(
             ContentType.content_type == 2, ContentType.user_id == user.id,
-            ContentType.content_type == Content.type_id).order_by(
+            Content.type_id == ContentType.id).order_by(
             Content.status.desc()).all()
 
-        if user.content_types:
+        # if user.content_types:
+        if len(tasks) > 0 or len(notes) > 0:
             context = {
                 "tasks": tasks,
                 "note": notes

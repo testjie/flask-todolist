@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>笔记编辑</title>
+    <link rel="stylesheet" href="/static/css/style.css"/>
+    <link rel="stylesheet" href="/static/css/editormd.css"/>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+</head>
+<body background="{{ url_for('static',filename='images/tulip.jpg') }}">
+
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">
+                <img class="logo" src="">
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="/">首页 <span class="sr-only">(current)</span></a></li>
+                <li><a href="/tasks/">任务</a></li>
+                <li class="active"><a href="/notes/">笔记</a></li>
+            </ul>
+            <form class="navbar-form navbar-left" action="" method="get">
+                <div class="form-group">
+                    <input name="q" type="text" class="form-control" placeholder="请输入关键字">
+                </div>
+                <button type="submit" class="btn btn-default">搜索查看</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                {% if user %}
+                <li><a href="" id="">{{ user.username }}</a></li>
+                <li><a href="/logout/">注销</a></li>
+                {% else %}
+                <li><a href="" id="login">登陆</a></li>
+                <li><a href="" id="reg">注册</a></li>
+                {% endif %}
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+
+<div id="layout">
+
+    <div style="margin-bottom: 50px; margin-left: 95px;">
+        <div class="form-inline" style="width: 50%;  margin-top: 80px;">
+            <label for="note_title" style="font-size: 18px;">标题: </label>
+            <input type="text" class="form-control" style="width: 50%;" id="note_title" placeholder="这里输入title"/>
+            <button class="btn btn-primary " id="submit" onclick="getHtml()">保存</button>
+        </div>
+
+        <div class="form-inline" style="width: 50%; margin-top: 30px;">
+            <label for="notebooks" style="font-size: 18px;">分类: </label>
+            <select id="notebooks" style="width: 50%;" class="form-control">
+            </select>
+            <button class="btn btn-primary " id="new_notebook" onclick="show_box(this)">新增</button>
+        </div>
+    </div>
+    <div id="test-editormd">
+        <textarea style="display:none;"></textarea>
+    </div>
+
+</div>
+
+
+<div class="modal" id="new_notebooke" tabindex="-1" role="dialog" aria-labelledby="signin_modal_label"
+     aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                        onclick="close_new_notebook()">×
+                </button>
+                <h4 class="modal-title" id="signin_modal_label">新增类别</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="m_notebook" class="sr-only">笔记本</label>
+                    <input type="text" class="form-control" id="m_notebook" name="username" required=""
+                           placeholder="输入笔记本名称" maxlength="32">
+                    <span class="text-danger small" style="display:none"></span>
+                </div>
+
+                <button type="submit" class="btn btn-lg btn-success btn-block" data-loading-text="正在登录..."
+                        onclick="new_notebook()">增加
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/editormd.min.js"></script>
+<script type="text/javascript">
+    var testEditor;
+
+    $(function () {
+        // 初始化editor
+        testEditor = editormd("test-editormd", {
+            width: "90%",
+            height: 640,
+            syncScrolling: "single",
+            path: "../static/lib/",
+            saveHTMLToTextarea: true,
+            toolbarIcons: function () {
+                // Or return editormd.toolbarModes[name]; // full, simple, mini
+                // Using "||" set icons align right.
+                return ["undo", "redo", "|", "bold", "del", "quote", "ucwords", "uppercase", "|", "h1", "h2", "h3", "|", "list-ul", "list-ol", "hr", "|", "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table", "datetime", "html-entities", "|", "watch", "preview", "fullscreen", "search", "|", "help"];
+            }
+        });
+
+
+        // 获取相关数据
+        $.ajax({
+            type: 'post',
+            url: '/get_notebook/',
+            success: function (str) { //返回json结果
+                data = JSON.parse(str); // 解析json字符串
+
+                // 成功和未登录都进行跳转
+                if (data.code == 1 || data.code == 20000) {
+                    for (var i = 0; i < data.data.length; i++) {
+                        $("#notebooks").append("<option value='" + data.data[i].id + "'>" + data.data[i].name + "</option>");
+                    }
+                } else {
+                    alert(data.msg);
+                }
+            },
+            fail: function (err, status) {
+                console.log(err);
+            }
+        });
+
+
+    });
+
+
+    var getHtml = function (e) {
+        $("#submit").attr("disabled", true);
+        notebook_id = $("#notebooks").val();
+        title = $("#note_title").val();
+        htmlCode = testEditor.getHTML();
+        markdownCode = testEditor.getMarkdown();
+
+        // 判断数据是否为空
+        if (htmlCode == "" || markdownCode == "" || title == "") {
+            alert("数据不全，请重新填写");
+            $("#submit").attr("disabled", false);
+            return;
+        }
+
+        // 通过了就发送请求添加数据
+        $.ajax({
+            type: 'post',
+            url: '/add_note/',
+            data: {'htmlCode': htmlCode, 'markdownCode': markdownCode, 'title': title, 'notebook_id': notebook_id},
+            success: function (str) { //返回json结果
+                data = JSON.parse(str); // 解析json字符串
+                // 成功和未登录都进行跳转
+                if (data.code == 1 || data.code == 20000) {
+                    if (data.url != "") {
+                        window.location.href = data.url;
+                    }
+                } else {
+                    alert(data.msg);
+                }
+            },
+            fail: function (err, status) {
+                console.log(err);
+            }
+        });
+
+
+        $("#submit").attr("disabled", false);
+
+
+        //testEditor.getMarkdown();       // 获取 Markdown 源码
+        //testEditor.getHTML();           // 获取 Textarea 保存的 HTML 源码
+        //testEditor.getPreviewedHTML();  // 获取预览窗口里的 HTML，在开启 watch 且没有开启 saveHTMLToTextarea 时使用
+    }
+
+    var show_box = function (obj) {
+        $("#new_notebooke").show();
+    }
+
+    var close_new_notebook = function () {
+        $("#new_notebooke").hide();
+    }
+
+    var new_notebook = function () {
+        var note_notebook = $("#m_notebook").val();
+
+        $.ajax({
+            type: 'post',
+            url: '/add_notebook/',
+            data: {"notebook_name": note_notebook},
+            success: function (str) { //返回json结果
+                data = JSON.parse(str); // 解析json字符串
+                // 成功和未登录都进行跳转
+                if (data.code == 1 || data.code == 20000) {
+                    $("#new_notebooke").hide();
+                    $("#notebooks").append("<option value='" + note_notebook + "'>" + note_notebook + "</option>");
+                    alert("添加成功");
+                } else {
+                    alert(data.msg);
+                }
+
+            },
+            fail: function (err, status) {
+                console.log(err);
+            }
+        });
+
+    }
+
+</script>
+</body>
+</html>

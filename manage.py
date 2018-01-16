@@ -5,6 +5,8 @@ from run import app
 from app.models.tbl_content_type import ContentType
 from app.models.tbl_content import Content
 from app.models.tbl_user import User
+from app.models.tbl_note import Note
+from app.models.tbl_notebook import NoteBook
 
 manager = Manager(app)
 mirgrate = Migrate(app, db)

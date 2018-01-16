@@ -1,0 +1,58 @@
+.main {
+    margin-top: 0px;
+}
+
+.left_content {
+    float: left;
+    width: 30%;
+    margin-left: 1%;
+}
+
+.right_content {
+    background: hsla(0, 0%, 100%, .5);
+    opacity: 1;
+    float: right;
+    margin-right: 8%;
+    width: 60%;
+}
+
+.note_title {
+    margin-left: 35%;
+}
+
+.note_date {
+    margin-left: 33%;
+}
+
+.datas {
+    width: 90%;
+    margin-left: 5%;
+}
+
+/*导航栏*/
+.ul-style {
+    list-style: none;
+}
+
+.li-style {
+    background: hsla(0, 0%, 100%, .5);
+    width: 100%;
+    height: 30px;
+    margin-bottom: 1px;
+    opacity: 1;
+    /*这三个结合现实省略号*/
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.header-style {
+    margin-left: 10px;
+    line-height: 30px;
+    text-overflow: ellipsis;
+}
+
+.editor {
+    overflow: scroll;
+    max-height: 300px
+}

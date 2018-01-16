@@ -36,7 +36,7 @@ def user_reg():
     db.session.add(user)
     db.session.commit()
 
-    return redirect("index.html")
+    return redirect(url_for("bp.index"))
 
 
 @bp.route("/logout/", methods=['GET', 'POST'])

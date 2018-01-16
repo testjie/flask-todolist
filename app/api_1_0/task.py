@@ -1,12 +1,13 @@
 from app.api_1_0 import bp
-from flask import render_template, session, redirect, url_for, request
-from app.api_1_0 import vues
+from flask import render_template, session, redirect, url_for, request, abort
+from app.api_1_0 import vues, errors
 from app.models.tbl_content import Content
 from app.models.tbl_content_type import ContentType
 from app.models.tbl_user import User
 from app.models.ext import db
 from app.utils.json_utlis import JsonUtils
 from app.utils import code_status
+from app.api_1_0.filter import login_required
 
 PAGE_PAGING_NO = 15
 
@@ -15,8 +16,7 @@ PAGE_PAGING_NO = 15
 def tasks():
     if session.get("user_id"):
         return render_template("tasks.html")
-    else:
-        return redirect(url_for("bp.index"))
+    return redirect(url_for("bp.index"))
 
 
 """
@@ -26,11 +26,11 @@ def tasks():
 
 
 @bp.route("/get_tasks/", methods=["GET", "POST"])
+@login_required
 def get_tasks():
     user_id = session.get("user_id")
     per_page = 15
     page = request.form.get("page", 1, type=int)  # 默认page=1,
-    print(page)
     if user_id:
         tasks = Content.query.join(ContentType).filter(ContentType.user_id == user_id, ContentType.content_type == 1,
                                                        Content.type_id == ContentType.id).paginate(page, per_page,
@@ -38,6 +38,7 @@ def get_tasks():
 
         count = Content.query.join(ContentType).filter(ContentType.user_id == user_id, ContentType.content_type == 1,
                                                        Content.type_id == ContentType.id).all()
+
         if count:
             # 计算翻页页数
             if len(count) % PAGE_PAGING_NO != 0:
@@ -52,8 +53,9 @@ def get_tasks():
 
             return JsonUtils(data=context, msg=code_status.SUCCESS_MSG, code=code_status.SUCCESS_CODE,
                              url="").get_json()
-    else:
-        return JsonUtils(msg=code_status.PERMISSION_MSG, code=code_status.PERMISSION_CODE, url="/").get_json()
+
+        return JsonUtils(msg=code_status.SUCCESS_CODE, code=code_status.SUCCESS_CODE, data={}, url="").get_json()
+
 
 
 """
@@ -62,13 +64,15 @@ def get_tasks():
 
 
 @bp.route("/add_task/", methods=["POST"])
+@login_required
 def add_task():
     title = request.form.get("content")
 
     if title == None or title == "":
         return JsonUtils(msg=code_status.FAILED_MSG, code=code_status.FAILED_CODE).get_json()
 
-    content_type = ContentType.query.filter(ContentType.content_type == 1).first()
+    content_type = ContentType.query.filter(ContentType.content_type == 1,
+                                            ContentType.user_id == session.get("user_id")).first()
     if content_type == None:
         content_type = ContentType(content_type=1, user_id=session.get("user_id"))
         content_type.user = User.query.filter(User.id == session.get("user_id")).first()
@@ -80,7 +84,7 @@ def add_task():
         db.session.commit()
     except:
         db.session.roll_back()
-        raise Exception("添加出现异常")
+        abort(500)
     else:
         return JsonUtils(msg=code_status.SUCCESS_MSG, code=code_status.SUCCESS_CODE, url="/tasks/").get_json()
 
@@ -92,6 +96,7 @@ def add_task():
 
 
 @bp.route("/del_task/", methods=["POST"])
+@login_required
 def del_task():
     task_ids = request.form.get("ids").split(",")
     task_ids.remove("")
@@ -114,10 +119,11 @@ def del_task():
 
 
 @bp.route("/update_task/", methods=["POST"])
+@login_required
 def update_task():
-    id = request.form.get("id");
-    title = request.form.get("title");
-    status = request.form.get("status");
+    id = request.form.get("id")
+    title = request.form.get("title")
+    status = request.form.get("status")
 
     if id != None and title != None and status != None:
         task_obj = Content.query.filter(Content.id == id).first()
@@ -127,7 +133,7 @@ def update_task():
             db.session.commit()
         except:
             db.session.roll_back()
-            raise Exception("操作失败")
+            abort(500)
 
         return JsonUtils(msg=code_status.SUCCESS_MSG, code=code_status.SUCCESS_CODE, url="/tasks/").get_json()
 
@@ -135,6 +141,7 @@ def update_task():
 
 
 @bp.route("/active_task/", methods=["POST"])
+@login_required
 def active_task():
     id = request.form.get("id")
     if id:
@@ -146,14 +153,15 @@ def active_task():
                 return JsonUtils(msg=code_status.SUCCESS_MSG, code=code_status.SUCCESS_CODE, url="/tasks/").get_json()
             except:
                 db.session.rollback()
-                raise Exception("操作失败")
+                abort(500)
 
-        raise Exception("Data Not Found, Content id=", id)
+        abort(500)
 
     return JsonUtils(msg=code_status.FAILED_MSG, code=code_status.FAILED_CODE, url="/tasks/").get_json()
 
 
 @bp.route("/finish_task/", methods=["POST"])
+@login_required
 def finish_task():
     id = request.form.get("id")
     if id:
@@ -165,8 +173,8 @@ def finish_task():
                 return JsonUtils(msg=code_status.SUCCESS_MSG, code=code_status.SUCCESS_CODE, url="/tasks/").get_json()
             except:
                 db.session.rollback()
-                raise Exception("操作失败")
+                abort(500)
 
-        raise Exception("Data Not Found, Content id=", id)
+        abort(500)
 
     return JsonUtils(msg=code_status.FAILED_MSG, code=code_status.FAILED_CODE, url="/tasks/").get_json()
